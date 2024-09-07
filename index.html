@@ -1,3 +1,6 @@
+t>
+  </body>
+  
 <!DOCTYPE html>
 <html lang="mr">
 <head>
@@ -185,35 +188,45 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const navItems = document.querySelectorAll('.nav-item');
-
-            navItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    const id = item.id;
-                    alert(`आपण "${item.querySelector('h2').textContent}" वर क्लिक केले आहे. या विभागाचे पृष्ठ लवकरच येत आहे!`);
-                });
-            });
-
-            particlesJS('particles', {
-                particles: {
-                    number: { value: 80, density: { enable: true, value_area: 800 } },
-                    color: { value: "#ff6b6b" },
-                    shape: { type: "circle" },
-                    opacity: { value: 0.5, random: false },
-                    size: { value: 3, random: true },
-                    line_linked: { enable: true, distance: 150, color: "#ff6b6b", opacity: 0.4, width: 1 },
-                    move: { enable: true, speed: 6, direction: "none", random: false, straight: false, out_mode: "out", bounce: false },
-                },
-                interactivity: {
-                    detect_on: "canvas",
-                    events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
-                    modes: { grab: { distance: 400, line_linked: { opacity: 1 } }, bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 }, repulse: { distance: 200, duration: 0.4 }, push: { particles_nb: 4 }, remove: { particles_nb: 2 } },
-                },
-                retina_detect: true,
-            });
+<script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const navItems = document.querySelectorAll('.nav-item');
+    
+        navItems.forEach(item => {
+          item.addEventListener('click', () => {
+            const id = item.id;
+    
+            // Navigate to respective pages
+            if (id === 'aartis') {
+              window.location.href = '/aarti.html';
+            } else if (id === 'shlokas') {
+              window.location.href = '/shlok.html';
+            } else if (id === 'japmala') {
+              window.location.href = '/japmala.html';
+            } else if (id === 'photos') {
+              window.location.href = '/images.html';
+            }
+          });
         });
+    
+        particlesJS('particles', {
+          particles: {
+            number: { value: 80, density: { enable: true, value_area: 800 } },
+            color: { value: "#ff6b6b" },
+            shape: { type: "circle" },
+            opacity: { value: 0.5, random: false },
+            size: { value: 3, random: true },
+            line_linked: { enable: true, distance: 150, color: "#ff6b6b", opacity: 0.4, width: 1 },
+            move: { enable: true, speed: 6, direction: "none", random: false, straight: false, out_mode: "out", bounce: false },
+          },
+          interactivity: {
+            detect_on: "canvas",
+            events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
+            modes: { grab: { distance: 400, line_linked: { opacity: 1 } }, bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 }, repulse: { distance: 200, duration: 0.4 }, push: { particles_nb: 4 }, remove: { particles_nb: 2 } },
+          },
+          retina_detect: true,
+        });
+      });
     </script>
-  </body>
-  
+                                                  </body>
+</html>
