@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Mala with Progress Bar and 360-degree Rotation</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    #heading-container {
+      position: absolute;
+      top: 2vw;
+      left: 0vw;
+      width: 100%;
+      background-color: transparent;
+    }
+
+    #headng-container {
+      position: absolute;
+      top: 0vw;
+      left: 0vw;
+      width: 100%;
+      background-color: transparent;
+      z-index: 100;
+    }
+
+    h1 {
+      color: #FF6B6B;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      font-size: 30px;
+      letter-spacing: 0.02em;
+      text-align: center;
+      font-family: 'Arial', sans-serif;
+      margin-bottom: -30px;
+    }
+
+    h3 {
+      color: #FF5D0C;
+      font-size: 200%;
+      text-align: center;
+      font-family: 'Arial', sans-serif;
+      animation: fadeInOut 1s ease-in-out forwards;
+      height: 100px; /* Fixed height for mantra display */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 8px 8px 16px #b8bec5, -8px -8px 16px #ffffff;
+            border-radius: 10px;
+            
+            width: 95%;
+            margin:5vh auto 0 auto;
+    }
+
+    h2 {
+      color: #FF5D1C;
+      margin-left: 50px;
+      top: -100px;
+      font-weight: bold;
+      font-family: 'Arial', sans-serif;
+      animation: countAnimation 1s ease-in-out backwards;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            
+    }
+
+    @keyframes fadeInOut {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes countAnimation {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes progress {
+      0% {
+        --percentage: 0;
+      }
+      100% {
+        --percentage: var(--value);
+      }
+    }
+
+    @property --percentage {
+      syntax: '<number>';
+      inherits: true;
+      initial-value: 0;
+    }
+
+    [role="progressbar"] {
+      --percentage: var(--value);
+      --primary: #FF901C;
+      --secondary: #C9C6C3;
+      --size: 150px;
+      animation: progress 2s 0.5s forwards;
+      width: var(--size);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border:2px solid --;
+      position: absolute;
+      overflow: hidden;
+      display: inline-block;
+      place-items: center;
+      top: 150px;
+      right: 70px;
+      margin-top: 25px;
+      color: #FF901C;
+      font-size: 23px;
+      box-shadow: 4px 4px 8px #b8bec5, -4px -4px 8px #ffffff;
+            transition: all 0.3s ease;
+    }
+
+    [role="progressbar"]::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: conic-gradient(var(--primary) calc(var(--percentage) * 1%), var(--secondary) 0);
+      mask: radial-gradient(white 55%, transparent 0);
+      mask-mode: alpha;
+      -webkit-mask: radial-gradient(#0000 55%, #000 0);
+      -webkit-mask-mode: alpha;
+    }
+
+    [role="progressbar"]::after {
+      counter-reset: percentage var(--value);
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: calc(var(--size) / 5);
+      color: var(--primary);
+    }
+
+    #startButton, #changeMantraButton {
+      font-size: 40px;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 4px 4px 8px #b8bec5, -4px -4px 8px #ffffff;
+            transition: all 0.3s ease;
+      
+      margin-left: 10px;
+      background-color: #FF6B6B;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 89px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #startButton:hover, #changeMantraButton:hover {
+      background-color: #E17D15;
+    }
+
+    #counter {
+      font-size: 80px;
+      color: #FF901C;
+      text-align: left;
+      margin-left: 50px;
+      
+      font-weight: bold;
+      font-family: 'Arial', sans-serif;
+      display: none;
+    }
+
+    #muteButton {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    #muteIcon {
+      font-size: 35px;
+      color: gainsboro;
+    }
+
+    #muteIcon.fa-volume-up:before {
+      content: "\f028";
+    }
+
+    #muteIcon.fa-volume-off:before {
+      content: "\f026";
+    }
+
+    .dark-mode-toggle {
+      position: fixed;
+      bottom: 15vh;
+      right: 20px;
+      background-color: #FF901C;
+      border: none;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .dark-mode-toggle:hover {
+      background-color: #E17D15;
+    }
+
+    .dark-mode-toggle i {
+      color: #fff;
+      font-size: 20px;
+    }
+
+    @media (max-width: 700px) {
+      h1 {
+        font-size: 2.5em;
+        margin:-0vh -0vh -5vh 0;
+        
+      }
+
+      h3 {
+        font-size: 5.6vw;
+        text-align: center;
+        right: 0px;
+      }
+
+      [role="progressbar"] {
+        --size: 25vmin;
+        font-size: 6vmin;
+        right: 23px;
+      }
+
+      #startButton, #changeMantraButton {
+        font-size: 25px;
+        margin-top: 6vh;
+      }
+
+      #muteIcon {
+        font-size: 29px;
+      }
+
+      #counter {
+        margin-top: 3vh;
+        font-size: 70px;
+        margin-left: 23px;
+      }
+      #mala-container{
+        
+              text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+              box-shadow: 8px 8px 16px #b8bec5, -8px -8px 16px #ffffff;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mala-container"></div>
+  <div id="heading-container">
+    <h1>जप माळ</h1>
+    <h3 id="heading">ओम गं गणपतये नमः</h3>
+   <button id="changeMantraButton">मंत्र बदला</button>
+
+    <h2 id="counter">0</h2>
+    <div role="progressbar" aria-valuenow="67" aria-valuemin="0" aria-valuemax="100" style="--value: 99; display: flex; align-items: center; justify-content: center;">
+      <span style="font-size: 30px;" id="rounds">0</span>
+      <span style="font-size: 28px;">/16</span>
+    </div>
+
+    <audio id="chanting-audio">
+      <source src="a.mp3" type="audio/mp3">
+      Your browser does not support the audio element.
+    </audio>
+   
+    <button id="darkModeToggle" class="dark-mode-toggle">
+      <i id="darkModeIcon" class="fas fa-sun"></i>
+    </button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script>
+    // Create a scene
+    const scene = new THREE.Scene();
+
+    // Create a camera
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.x = -9.3;
+    camera.position.z = 2;
+
+    // Create a renderer
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0xE0E5EC);
+    document.getElementById('mala-container').appendChild(renderer.domElement);
+
+    // Create materials
+    const beadMaterial = new THREE.MeshStandardMaterial({
+      map: new THREE.TextureLoader().load('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKU_hEBJ8JmVZcDpWs0wMcKxK59CuR6H1rKqLjco2ZOw&s'),
+    });
+
+    // Create beads
+    const numBeads = 18;
+    const beads = [];
+    const radius = 0.5;
+    const spacing = 0.2;
+    const circleRadius = 3;
+    const bottomOffset = -3;
+
+    const malaGroup = new THREE.Group(); // Create a group for the mala
+
+    for (let i = 0; i < numBeads; i++) {
+      const bead = new THREE.Mesh(new THREE.SphereGeometry(radius, 32, 32), beadMaterial);
+      const angle = (i / numBeads) * Math.PI * 2;
+
+      bead.position.x = Math.cos(angle) * circleRadius;
+      bead.position.y = Math.sin(angle) * circleRadius + bottomOffset;
+      bead.position.z = 0;
+      malaGroup.add(bead);
+      beads.push(bead);
+    }
+
+    scene.add(malaGroup);
+
+    // Create lights
+    const ambientLight = new THREE.AmbientLight(0x404040);
+    scene.add(ambientLight);
+
+    const pointLight1 = new THREE.PointLight(0x000000);
+    pointLight1.position.set(5, 5, 5);
+    scene.add(pointLight1);
+
+    const pointLight2 = new THREE.PointLight(0xDEE9FA);
+    pointLight2.position.set(-5, 5, -5);
+    scene.add(pointLight2);
+
+    const pointLight3 = new THREE.PointLight(0x000000);
+    pointLight3.position.set(5, -5, -5);
+    scene.add(pointLight3);
+
+    const pointLight4 = new THREE.PointLight(0xDEE9FA);
+    pointLight4.position.set(-5, -5, 5);
+    scene.add(pointLight4);
+
+    // Create orbit controls
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enabled = false;
+
+    // Rotation variables
+    let rotation = 0;
+    const rotationSpeed = 0.011;
+    let isSpinning = false;
+    let spinTimeout;
+
+    // Counter variable
+    let counter = 0;
+    let rounds = 0;
+
+    // 360-degree rotation variables
+    let is360Rotating = false;
+    let rotation360 = 0;
+    const rotationSpeed360 = 0.08;
+
+    // Event listeners
+    renderer.domElement.addEventListener('click', startSpinning);
+
+    // Mantra variables
+    const mantras = [
+            "हरे कृष्ण हरे कृष्ण कृष्ण कृष्ण हरे हरे <br> हरे राम हरे राम राम राम हरे हरे",
+      "ॐ गं गणपतये नमः",
+
+      "ॐ नमः शिवाय",
+      "श्री राम जय राम जय जय राम",
+      "ॐ नमो भगवते वासुदेवाय",
+      "ॐ त्र्यम्बकं यजामहे सुगन्धिं पुष्टिवर्धनम् उर्वारुकमिव बन्धनान्मृत्योर्मुक्षीय मामृतात्"
+    ];
+    let currentMantraIndex = 0;
+
+    // Render loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (isSpinning) {
+        // Rotate the beads
+        rotation += rotationSpeed;
+        beads.forEach((bead, index) => {
+          bead.position.x = Math.cos(index * ((Math.PI * 2) / numBeads) + rotation) * circleRadius;
+          bead.position.y = Math.sin(index * ((Math.PI * 2) / numBeads) + rotation) * circleRadius + bottomOffset;
+        });
+
+        // Update counter
+        document.getElementById('counter').innerText = counter;
+
+        // Update rounds and progress bar
+        if (counter > 108) {
+          rounds++;
+          counter = 0;
+          updateProgressBar(rounds / 16 * 100);
+          document.getElementById('rounds').innerText = rounds;
+
+          // Start 360-degree rotation
+          is360Rotating = true;
+          isSpinning = false;
+        }
+
+        document.getElementById('heading').innerHTML = mantras[currentMantraIndex];
+      }
+
+      if (is360Rotating) {
+        rotation360 += rotationSpeed360;
+        malaGroup.rotation.y = rotation360;
+
+        if (rotation360 >= Math.PI * 1) {
+          is360Rotating = false;
+          rotation360 = 0;
+          malaGroup.rotation.y = 0;
+        }
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    const chantingAudio = document.getElementById('chanting-audio');
+    let isMuted = true;
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      chantingAudio.muted = isMuted;
+
+      const muteIcon = document.getElementById('muteIcon');
+      muteIcon.classList.toggle('fa-volume-up', !isMuted);
+      muteIcon.classList.toggle('fa-volume-off', isMuted);
+    }
+
+    function startSpinning() {
+      
+      
+      const changeMantraButton = document.getElementById('changeMantraButton');
+
+      if (!isSpinning) {
+        const audioSource = document.getElementById('chanting-audio').querySelector('source');
+        audioSource.src = 'a.mp3';
+        document.getElementById('chanting-audio').load();
+        isSpinning = true; // Start spinning
+        chantingAudio.currentTime = 0;
+        chantingAudio.play();
+        spinTimeout = setTimeout(stopSpinning, 518);
+        counter++;
+        updateProgressBar(rounds / 16 * 100);
+        document.getElementById('counter').style.display = 'inline-block'; // Show the counter
+        changeMantraButton.style.display = 'none'; // Hide change mantra button
+         
+        // Add vibration
+        if (navigator.vibrate) {
+          navigator.vibrate(80); // Vibrate for 80 milliseconds
+        }
+      } else {
+        stopSpinning();
+        changeMantraButton.innerText = 'मंत्र बदला'; // Change to "Restart" in Marathi
+        changeMantraButton.style.display = 'inline-block'; // Show change mantra button
+      }
+    }
+
+    function updateProgressBar(value) {
+      const progressBar = document.querySelector('[role="progressbar"]');
+      progressBar.style.setProperty('--value', value);
+    }
+
+    function stopSpinning() {
+      isSpinning = false;
+      clearTimeout(spinTimeout);
+      chantingAudio.pause();
+      chantingAudio.currentTime = 0;
+    }
+
+    
+
+    // New function to change mantra with dynamic font sizing
+    function changeMantra() {
+      currentMantraIndex = (currentMantraIndex + 1) % mantras.length;
+      const mantraElement = document.getElementById('heading');
+      mantraElement.innerHTML = mantras[currentMantraIndex];
+      
+      // Dynamic font sizing
+      const containerWidth = mantraElement.offsetWidth;
+      const containerHeight = mantraElement.offsetHeight;
+      let fontSize = 200; // Start with a large font size
+      mantraElement.style.fontSize = `${fontSize}%`;
+      
+      // Reduce font size until it fits
+      while ((mantraElement.scrollWidth > containerWidth || mantraElement.scrollHeight > containerHeight) && fontSize > 50) {
+        fontSize -= 10;
+        mantraElement.style.fontSize = `${fontSize}%`;
+      }
+    }
+
+    // Event listener for change mantra button
+    document.getElementById('changeMantraButton').addEventListener('click', changeMantra);
+
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const darkModeIcon = document.getElementById('darkModeIcon');
+    let isDarkMode = false;
+
+    darkModeToggle.addEventListener('click', () => {
+      isDarkMode = !isDarkMode;
+
+      if (isDarkMode) {
+        document.body.style.transition = 'background-color 0.9s ease';
+        document.body.style.backgroundColor = 'black';
+        darkModeIcon.classList.remove('fa-sun');
+        darkModeIcon.classList.add('fa-moon');
+        renderer.setClearColor(0x000000); // Set dark mode background
+      } else {
+        document.body.style.transition = 'background-color 0.9s ease';
+        document.body.style.backgroundColor = 'white';
+        darkModeIcon.classList.remove('fa-moon');
+        darkModeIcon.classList.add('fa-sun');
+        renderer.setClearColor(0xfE0E5EC); // Set light mode background
+      }
+    });
+
+    // Initialize the first mantra with dynamic font sizing
+    changeMantra();
+
+    animate();
+  </script>
+</body>
+
+</html>
