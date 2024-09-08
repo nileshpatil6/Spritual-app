@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="mr">
 <head>
     <meta charset="UTF-8">
@@ -28,30 +28,33 @@
             overflow-x: hidden;
         }
 
-        .container {
-            max-width: 1200px;
-            width: 90%;
-            margin: 0 5vh 5vh;
-            margin-top: 5vh;
+        /* Intro screen styles */
+        .intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 1s ease-out;
         }
 
-        h1 {margin-top: 10vh;
+        .intro-message {
+            font-size: 2.3em;
             text-align: center;
-            color: var(--primary-color);
-            font-size: 2.5em;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .typewriter {
             overflow: hidden;
-            
             white-space: nowrap;
             margin: 0 auto;
-            
+            color:#FF6B6B;
+            letter-spacing: 0em;
+            border-right: .15em solid var(--primary-color);
             animation: 
-                typing 3.5s steps(40, end),
-                blink-caret .75s step-end ;
+                typing 1.5s steps(40, end),
+                blink-caret .75s step-end infinite;
         }
 
         @keyframes typing {
@@ -62,6 +65,32 @@
         @keyframes blink-caret {
             from, to { border-color: transparent }
             50% { border-color: var(--primary-color); }
+        }
+
+        /* Existing styles */
+        .container {
+            max-width: 1200px;
+            width: 90%;
+            margin: 0 5vh 5vh;
+            margin-top: 5vh;
+        }
+
+        h1 {
+            margin-top: 10vh;
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 0 auto;
+            animation: 
+                typing 3.5s steps(40, end),
+                blink-caret .75s step-end;
         }
 
         .nav-container {
@@ -128,9 +157,8 @@
             background-position: center;
             border-radius: 50%;
             margin: 4vh auto 30px;
-            animation:  float 6s ease-in-out infinite;
-                  box-shadow: 8px 8px 16px #b8bec5, -8px -8px 16px #ffffff;
-                  
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 8px 8px 16px #b8bec5, -8px -8px 16px #ffffff;
         }
 
         @keyframes float {
@@ -157,6 +185,12 @@
     <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
 </head>
 <body>
+    <!-- Intro screen -->
+    <div class="intro-screen" id="introScreen">
+        <div class="intro-message">सार्वजनिक गणेश उत्सव मंडळ <br> दोड्डहोसूर <br>स्वागत करत आहे</div>
+    </div>
+
+    <!-- Existing content -->
     <div class="particles" id="particles"></div>
     <div class="container">
         <h1 class="typewriter">जय श्री गणेश</h1>
@@ -184,47 +218,59 @@
             </div>
         </div>
     </div>
-
+<footer>
+  <h4 style="box-shadow: 12px 12px 20px #b8bec5, -12px -12px 20px #ffffff; border-radius: 10px; padding: 5px;">Created with devotion by Nilesh ✨🚩</h4>
+</footer>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-<script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const navItems = document.querySelectorAll('.nav-item');
-    
-        navItems.forEach(item => {
-          item.addEventListener('click', () => {
-            const id = item.id;
-    
-            // Navigate to respective pages
-            if (id === 'aartis') {
-              window.location.href = '/aarti.html';
-            } else if (id === 'shlokas') {
-              window.location.href = '/shlok.html';
-            } else if (id === 'japmala') {
-              window.location.href = '/japmala.html';
-            } else if (id === 'photos') {
-              window.location.href = '/images.html';
-            }
-          });
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Intro screen logic
+            setTimeout(() => {
+                const introScreen = document.getElementById('introScreen');
+                introScreen.style.opacity = '0';
+                setTimeout(() => {
+                    introScreen.style.display = 'none';
+                }, 1000);
+            }, 2000); // Adjust this time to control how long the intro screen is shown
+
+            // Existing JavaScript
+            const navItems = document.querySelectorAll('.nav-item');
+        
+            navItems.forEach(item => {
+              item.addEventListener('click', () => {
+                const id = item.id;
+        
+                // Navigate to respective pages
+                if (id === 'aartis') {
+                  window.location.href = '/aarti.html';
+                } else if (id === 'shlokas') {
+                  window.location.href = '/shlok.html';
+                } else if (id === 'japmala') {
+                  window.location.href = '/japmala.html';
+                } else if (id === 'photos') {
+                  window.location.href = '/images.html';
+                }
+              });
+            });
+        
+            particlesJS('particles', {
+              particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: "#ff6b6b" },
+                shape: { type: "circle" },
+                opacity: { value: 0.5, random: false },
+                size: { value: 3, random: true },
+                line_linked: { enable: true, distance: 150, color: "#ff6b6b", opacity: 0.4, width: 1 },
+                move: { enable: true, speed: 6, direction: "none", random: false, straight: false, out_mode: "out", bounce: false },
+              },
+              interactivity: {
+                detect_on: "canvas",
+                events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
+                modes: { grab: { distance: 400, line_linked: { opacity: 1 } }, bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 }, repulse: { distance: 200, duration: 0.4 }, push: { particles_nb: 4 }, remove: { particles_nb: 2 } },
+              },
+              retina_detect: true,
+            });
         });
-    
-        particlesJS('particles', {
-          particles: {
-            number: { value: 80, density: { enable: true, value_area: 800 } },
-            color: { value: "#ff6b6b" },
-            shape: { type: "circle" },
-            opacity: { value: 0.5, random: false },
-            size: { value: 3, random: true },
-            line_linked: { enable: true, distance: 150, color: "#ff6b6b", opacity: 0.4, width: 1 },
-            move: { enable: true, speed: 6, direction: "none", random: false, straight: false, out_mode: "out", bounce: false },
-          },
-          interactivity: {
-            detect_on: "canvas",
-            events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
-            modes: { grab: { distance: 400, line_linked: { opacity: 1 } }, bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 }, repulse: { distance: 200, duration: 0.4 }, push: { particles_nb: 4 }, remove: { particles_nb: 2 } },
-          },
-          retina_detect: true,
-        });
-      });
     </script>
 </body>
-</html>
+    </html>
